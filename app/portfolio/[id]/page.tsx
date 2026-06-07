@@ -228,12 +228,14 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-4xl mx-auto">
             {/* Breadcrumb */}
-            <Link href="/portfolio" className="inline-flex items-center text-primary hover:text-primary/80 mb-6">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Portfolio
-            </Link>
+            <div className="mb-6">
+              <Link href="/portfolio" className="inline-flex items-center text-primary hover:text-primary/80">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Portfolio
+              </Link>
+            </div>
 
-            <span className="text-primary font-medium uppercase tracking-wider text-sm">
+            <span className="text-primary font-medium uppercase tracking-wider text-sm block">
               {project.category}
             </span>
             <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mt-2 mb-6">
