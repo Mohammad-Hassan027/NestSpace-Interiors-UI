@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-[100svh] flex items-center overflow-hidden">
+    <section className="relative min-h-svh flex items-center overflow-hidden">
       {/* Background Image - Large & Immersive */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -18,17 +18,17 @@ export function HeroSection() {
         />
 
         {/* Premium Multi-Layer Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/50" />
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-accent/5" />
+        <div className="absolute inset-0 bg-linear-to-r from-background via-background/90 to-background/30" />
+        <div className="absolute inset-0 bg-linear-to-t from-background via-background/30 to-background/50" />
+        <div className="absolute inset-0 bg-linear-to-br from-primary/8 via-transparent to-accent/5" />
 
         {/* Subtle Vignette */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,var(--background)_100%)] opacity-40" />
       </div>
 
       {/* Animated Decorative Elements */}
-      <div className="absolute top-1/3 right-1/3 w-[400px] sm:w-[500px] lg:w-[600px] h-[400px] sm:h-[500px] lg:h-[600px] bg-primary/8 rounded-full blur-[80px] sm:blur-[100px] lg:blur-[120px] animate-pulse duration-3000" />
-      <div className="absolute bottom-1/4 left-1/4 w-[300px] sm:w-[350px] lg:w-[400px] h-[300px] sm:h-[350px] lg:h-[400px] bg-accent/6 rounded-full blur-[60px] sm:blur-[80px] lg:blur-[100px] animate-pulse duration-3000 delay-1500" />
+      <div className="absolute top-1/3 right-1/3 w-100 sm:w-125 lg:w-150 h-100 sm:h-125 lg:h-150 bg-primary/8 rounded-full blur-[80px] sm:blur-[100px] lg:blur-[120px] animate-pulse duration-3000" />
+      <div className="absolute bottom-1/4 left-1/4 w-75 sm:w-87.5 lg:w-100 h-75 sm:h-87.5 lg:h-100 bg-accent/6 rounded-full blur-[60px] sm:blur-[80px] lg:blur-[100px] animate-pulse duration-3000 delay-1500" />
 
       {/* Content */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 relative z-10 pt-24 sm:pt-28 lg:pt-32 pb-16 sm:pb-20 lg:pb-24">

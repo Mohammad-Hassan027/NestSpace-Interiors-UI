@@ -74,7 +74,7 @@ export default function AboutPage() {
                 Our team of passionate designers and architects work together to create harmonious spaces that balance aesthetics with functionality, bringing your vision to life with meticulous attention to detail.
               </p>
             </div>
-            <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+            <div className="relative aspect-4/3 rounded-lg overflow-hidden">
               <Image
                 src="/images/about-hero.jpg"
                 alt="NestSpace team at work"
@@ -191,7 +191,7 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {team.map((member) => (
               <Card key={member.name} className="bg-card border-border overflow-hidden group">
-                <div className="relative aspect-[3/4] overflow-hidden">
+                <div className="relative aspect-3/4 overflow-hidden">
                   <Image
                     src={member.image}
                     alt={member.name}
