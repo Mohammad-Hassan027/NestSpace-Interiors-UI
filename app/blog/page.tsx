@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Navigation } from "@/components/navigation"
@@ -6,10 +9,28 @@ import { CTASection } from "@/components/home/cta-section"
 import { Calendar, Clock, ArrowRight } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { blogPosts, featuredPost } from "@/lib/blog-data"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
-const latestPosts = blogPosts.slice(1)
+const categories = ["All", ...Array.from(new Set(blogPosts.map((post) => post.category)))]
 
 export default function BlogPage() {
+  const [activeCategory, setActiveCategory] = useState("All")
+  const [isTransitioning, setIsTransitioning] = useState(false)
+
+  const handleFilterChange = (category: string) => {
+    setIsTransitioning(true)
+    setTimeout(() => {
+      setActiveCategory(category)
+      setIsTransitioning(false)
+    }, 200)
+  }
+
+  const latestPosts = blogPosts.slice(1)
+  const filteredPosts = activeCategory === "All"
+    ? latestPosts
+    : latestPosts.filter((post) => post.category === activeCategory)
+
   return (
     <main className="min-h-screen bg-background">
       <Navigation />
@@ -62,9 +83,33 @@ export default function BlogPage() {
 
       <section className="py-16 bg-secondary/30">
         <div className="container mx-auto px-4 lg:px-8">
-          <h2 className="font-serif text-3xl font-bold text-foreground mb-12">Latest Articles</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {latestPosts.map((post) => (
+          <h2 className="font-serif text-3xl font-bold text-foreground mb-8">Latest Articles</h2>
+          
+          {/* Filters */}
+          <div className="flex flex-wrap justify-center gap-2 mb-12">
+            {categories.map((category) => (
+              <Button
+                key={category}
+                variant="ghost"
+                onClick={() => handleFilterChange(category)}
+                size="sm"
+                className={cn(
+                  "px-5 h-10 rounded-full text-sm font-medium transition-all duration-300",
+                  activeCategory === category
+                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
+                    : "bg-muted text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                {category}
+              </Button>
+            ))}
+          </div>
+
+          <div className={cn(
+            "grid md:grid-cols-2 lg:grid-cols-3 gap-8 transition-opacity duration-200",
+            isTransitioning ? "opacity-0" : "opacity-100"
+          )}>
+            {filteredPosts.map((post) => (
               <Link key={post.slug} href={`/blog/${post.slug}`}>
                 <Card className="h-full bg-card border-border/60 overflow-hidden group hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 rounded-3xl">
                   <div className="relative aspect-16/10 overflow-hidden">
