@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ArrowUpRight } from "lucide-react"
 
+const ITEMS_PER_PAGE = 4
+
 export interface PortfolioItem {
   id: string
   title: string
@@ -25,17 +27,26 @@ interface PortfolioGalleryProps {
 export function PortfolioGallery({ items, categories }: PortfolioGalleryProps) {
   const [activeFilter, setActiveFilter] = useState("All")
   const [isTransitioning, setIsTransitioning] = useState(false)
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE)
 
   const filteredItems = activeFilter === "All"
     ? items
     : items.filter(item => item.category === activeFilter)
 
+  const visibleItems = filteredItems.slice(0, visibleCount)
+  const hasMore = visibleCount < filteredItems.length
+
   const handleFilterChange = (category: string) => {
     setIsTransitioning(true)
     setTimeout(() => {
       setActiveFilter(category)
+      setVisibleCount(ITEMS_PER_PAGE)
       setIsTransitioning(false)
     }, 200)
+  }
+
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + ITEMS_PER_PAGE)
   }
 
   return (
@@ -67,7 +78,7 @@ export function PortfolioGallery({ items, categories }: PortfolioGalleryProps) {
             isTransitioning ? "opacity-0" : "opacity-100"
           )}
         >
-          {filteredItems.map((item, index) => (
+          {visibleItems.map((item, index) => (
             <Link
               key={item.id}
               href={`/portfolio/${item.id}`}
@@ -125,14 +136,17 @@ export function PortfolioGallery({ items, categories }: PortfolioGalleryProps) {
         </div>
 
         {/* Load More */}
-        <div className="text-center mt-20">
-          <Button
-            size="lg"
-            className="h-14 px-10 rounded-full border border-primary/40 bg-secondary/40 text-foreground backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:border-primary hover:shadow-[0_14px_40px_rgba(201,138,63,0.28)] hover:-translate-y-0.5"
-          >
-            Load More Projects
-          </Button>
-        </div>
+        {hasMore && (
+          <div className="text-center mt-20">
+            <Button
+              size="lg"
+              onClick={handleLoadMore}
+              className="h-14 px-10 rounded-full border border-primary/40 bg-secondary/40 text-foreground backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:border-primary hover:shadow-[0_14px_40px_rgba(201,138,63,0.28)] hover:-translate-y-0.5"
+            >
+              Load More Projects
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   )
