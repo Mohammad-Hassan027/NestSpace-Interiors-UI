@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { CTASection } from "@/components/home/cta-section"
+import { ScrollToTop } from "@/components/scroll-to-top"
 import { ArrowLeft, ArrowRight, Calendar, MapPin, Ruler, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -380,6 +381,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
 
       <CTASection />
       <Footer />
+      <ScrollToTop />
     </main>
   )
 }
