@@ -6,6 +6,7 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { CTASection } from "@/components/home/cta-section"
 import { ShareBar } from "@/components/blog/share-bar"
+import { ReadingProgress } from "@/components/blog/reading-progress"
 import { blogPosts, getBlogPostBySlug } from "@/lib/blog-data"
 
 export function generateStaticParams() {
@@ -22,6 +23,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
 
   return (
     <main className="min-h-screen bg-background">
+      <ReadingProgress />
       <Navigation />
 
       <article className="pt-32 pb-20">
