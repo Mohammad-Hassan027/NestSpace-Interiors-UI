@@ -1,15 +1,16 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useCallback } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { CTASection } from "@/components/home/cta-section"
-import { Calendar, Clock, ArrowRight } from "lucide-react"
+import { Calendar, Clock, ArrowRight, Search } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { blogPosts, featuredPost } from "@/lib/blog-data"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 
 const categories = ["All", ...Array.from(new Set(blogPosts.map((post) => post.category)))]
@@ -17,6 +18,8 @@ const categories = ["All", ...Array.from(new Set(blogPosts.map((post) => post.ca
 export default function BlogPage() {
   const [activeCategory, setActiveCategory] = useState("All")
   const [isTransitioning, setIsTransitioning] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const handleFilterChange = (category: string) => {
     setIsTransitioning(true)
@@ -26,10 +29,25 @@ export default function BlogPage() {
     }, 200)
   }
 
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    if (debounceTimer.current) clearTimeout(debounceTimer.current)
+    debounceTimer.current = setTimeout(() => {
+      setSearchQuery(value)
+    }, 200)
+  }, [])
+
   const latestPosts = blogPosts.slice(1)
-  const filteredPosts = activeCategory === "All"
-    ? latestPosts
-    : latestPosts.filter((post) => post.category === activeCategory)
+  const filteredPosts = latestPosts.filter((post) => {
+    const matchesCategory = activeCategory === "All" || post.category === activeCategory
+    const query = searchQuery.trim().toLowerCase()
+    const matchesSearch =
+      query === "" ||
+      post.title.toLowerCase().includes(query) ||
+      post.excerpt.toLowerCase().includes(query) ||
+      post.category.toLowerCase().includes(query)
+    return matchesCategory && matchesSearch
+  })
 
   return (
     <main className="min-h-screen bg-background">
@@ -84,57 +102,84 @@ export default function BlogPage() {
       <section className="py-16 bg-secondary/30">
         <div className="container mx-auto px-4 lg:px-8">
           <h2 className="font-serif text-3xl font-bold text-foreground mb-8">Latest Articles</h2>
-          
-          {/* Filters */}
-          <div className="flex flex-wrap justify-center gap-2 mb-12">
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant="ghost"
-                onClick={() => handleFilterChange(category)}
-                size="sm"
-                className={cn(
-                  "px-5 h-10 rounded-full text-sm font-medium transition-all duration-300",
-                  activeCategory === category
-                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
-                    : "bg-muted text-muted-foreground hover:bg-muted hover:text-foreground"
-                )}
-              >
-                {category}
-              </Button>
-            ))}
+
+          {/* Search & Filters */}
+          <div className="flex flex-col items-center gap-6 mb-12">
+            {/* Search input */}
+            <div className="relative w-full max-w-md">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              <Input
+                id="blog-search"
+                type="search"
+                placeholder="Search articles by title, topic, or keyword…"
+                onChange={handleSearchChange}
+                className="pl-9 h-11 rounded-full bg-background border-border/60 focus-visible:border-primary focus-visible:ring-primary/20 text-sm"
+              />
+            </div>
+
+            {/* Category filter buttons */}
+            <div className="flex flex-wrap justify-center gap-2">
+              {categories.map((category) => (
+                <Button
+                  key={category}
+                  variant="ghost"
+                  onClick={() => handleFilterChange(category)}
+                  size="sm"
+                  className={cn(
+                    "px-5 h-10 rounded-full text-sm font-medium transition-all duration-300",
+                    activeCategory === category
+                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
+                      : "bg-muted text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  {category}
+                </Button>
+              ))}
+            </div>
           </div>
 
-          <div className={cn(
-            "grid md:grid-cols-2 lg:grid-cols-3 gap-8 transition-opacity duration-200",
-            isTransitioning ? "opacity-0" : "opacity-100"
-          )}>
-            {filteredPosts.map((post) => (
-              <Link key={post.slug} href={`/blog/${post.slug}`}>
-                <Card className="h-full bg-card border-border/60 overflow-hidden group hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 rounded-3xl">
-                  <div className="relative aspect-16/10 overflow-hidden">
-                    <Image
-                      src={post.image}
-                      alt={post.title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <CardContent className="p-6">
-                    <span className="text-primary text-xs font-medium uppercase tracking-wider">{post.category}</span>
-                    <h3 className="font-serif text-xl font-semibold text-foreground mt-2 mb-3 group-hover:text-primary transition-colors line-clamp-2">
-                      {post.title}
-                    </h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed mb-4 line-clamp-2">{post.excerpt}</p>
-                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{post.date}</span>
-                      <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{post.readTime}</span>
+          {filteredPosts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">
+              <div className="rounded-full bg-muted p-5 mb-2">
+                <Search className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <h3 className="font-serif text-xl font-semibold text-foreground">No articles found</h3>
+              <p className="text-muted-foreground text-sm max-w-xs">
+                No posts match your current search or filter. Try a different keyword or select another category.
+              </p>
+            </div>
+          ) : (
+            <div className={cn(
+              "grid md:grid-cols-2 lg:grid-cols-3 gap-8 transition-opacity duration-200",
+              isTransitioning ? "opacity-0" : "opacity-100"
+            )}>
+              {filteredPosts.map((post) => (
+                <Link key={post.slug} href={`/blog/${post.slug}`}>
+                  <Card className="h-full bg-card border-border/60 overflow-hidden group hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 rounded-3xl">
+                    <div className="relative aspect-16/10 overflow-hidden">
+                      <Image
+                        src={post.image}
+                        alt={post.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
                     </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
+                    <CardContent className="p-6">
+                      <span className="text-primary text-xs font-medium uppercase tracking-wider">{post.category}</span>
+                      <h3 className="font-serif text-xl font-semibold text-foreground mt-2 mb-3 group-hover:text-primary transition-colors line-clamp-2">
+                        {post.title}
+                      </h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed mb-4 line-clamp-2">{post.excerpt}</p>
+                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{post.date}</span>
+                        <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{post.readTime}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
