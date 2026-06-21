@@ -302,3 +302,15 @@ export const featuredPost = blogPosts[0]
 export function getBlogPostBySlug(slug: string) {
   return blogPosts.find((post) => post.slug === slug)
 }
+
+export function getRelatedPosts(slug: string, category: string, limit: number = 3) {
+  const otherPosts = blogPosts.filter((post) => post.slug !== slug)
+  const sameCategoryPosts = otherPosts.filter((post) => post.category === category)
+
+  if (sameCategoryPosts.length >= limit) {
+    return sameCategoryPosts.slice(0, limit)
+  }
+
+  const otherCategoryPosts = otherPosts.filter((post) => post.category !== category)
+  return [...sameCategoryPosts, ...otherCategoryPosts].slice(0, limit)
+}

@@ -8,6 +8,7 @@ import { CTASection } from "@/components/home/cta-section"
 import { ShareBar } from "@/components/blog/share-bar"
 import { ReadingProgress } from "@/components/blog/reading-progress"
 import { blogPosts, getBlogPostBySlug } from "@/lib/blog-data"
+import { RelatedPosts } from "@/components/blog/related-posts"
 
 export function generateStaticParams() {
   return blogPosts.map((post) => ({ slug: post.slug }))
@@ -82,6 +83,8 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
           </div>
         </div>
       </article>
+
+      <RelatedPosts currentSlug={post.slug} category={post.category} />
 
       <CTASection />
       <Footer />
