@@ -12,7 +12,7 @@ export function PrintButton() {
 
   return (
     <Button
-      variant="outline"
+      variant="secondary"
       size="sm"
       onClick={handlePrint}
       className="gap-2 text-xs h-8 cursor-pointer shrink-0"
