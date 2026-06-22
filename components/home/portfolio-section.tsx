@@ -121,6 +121,7 @@ export function PortfolioSection() {
                 fill
                 className="object-cover"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                style={{ viewTransitionName: `project-${item.id}` } as React.CSSProperties}
               />
 
               {/* Default Subtle Overlay */}
