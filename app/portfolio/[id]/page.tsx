@@ -220,6 +220,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
             fill
             className="object-cover"
             priority
+            style={{ viewTransitionName: `project-${id}` } as React.CSSProperties}
           />
           <div className="absolute inset-0 bg-linear-to-t from-background via-background/30 to-transparent" />
         </div>
