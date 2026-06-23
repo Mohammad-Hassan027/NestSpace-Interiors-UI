@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display, Poppins } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { ScrollToTop } from "@/components/scroll-to-top";
+import { CookieBanner } from "@/components/cookie-banner";
+import { ConditionalAnalytics } from "@/components/conditional-analytics";
 import "./globals.css";
 
 const inter = Inter({
@@ -87,8 +88,9 @@ export default function RootLayout({
           {children}
           <ScrollToTop/>
           <Toaster richColors position="bottom-right" />
+          <CookieBanner />
         </ThemeProvider>
-        <Analytics />
+        <ConditionalAnalytics />
       </body>
     </html>
   );
