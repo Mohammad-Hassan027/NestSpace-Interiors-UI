@@ -538,6 +538,84 @@
   );
 }
 
+/* Print Stylesheet */
+@media print {
+  /* Hide navigation, footer, scroll-to-top, buttons, and other interactive or decorative components */
+  header,
+  footer,
+  button,
+  .no-print,
+  [aria-label="Scroll to top"] {
+    display: none !important;
+  }
+
+  /* Reset body styling for printing */
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-size: 12pt !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Force light theme colors for printing */
+  * {
+    color: #000000 !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    border-radius: 0 !important;
+    transition: none !important;
+  }
+
+  /* Keep basic layout and typography readable */
+  h1, h2, h3, h4, h5, h6 {
+    color: #000000 !important;
+    font-weight: bold !important;
+    page-break-after: avoid;
+  }
+
+  /* Set margin for print pages */
+  @page {
+    margin: 2cm;
+  }
+
+  /* Ensure content container is full width and clean */
+  .container {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  main {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    min-height: auto !important;
+  }
+
+  section {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* Expands collapsed content */
+  details,
+  [data-state="closed"] > [data-state="closed"],
+  .collapsible-content,
+  [data-collapsible] {
+    display: block !important;
+    height: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  /* Add border to contact details section or important callouts for readability since backgrounds are transparent */
+  .bg-secondary\/30 {
+    border: 1px solid #cccccc !important;
+    padding: 1rem !important;
+  }
+}
+
 /* Route View Transitions */
 @keyframes fade-out {
   from {
@@ -562,4 +640,3 @@
     animation: none !important;
   }
 }
-
