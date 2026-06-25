@@ -106,7 +106,10 @@ git push origin feat/your-feature-name
 ### Step 5: Submit a Pull Request
 1. Open a PR targeting the original repository's `main` branch.
 2. Fill out the PR template completely.
-3. Link the PR to the assigned issue (e.g. `Closes #8`).
+3. Link the PR to your assigned issue in the PR description (e.g. `Closes #8`, `Fixes #12`, or `Resolves #42`).
+   > [!IMPORTANT]
+   > All PRs must include a linked issue reference (`Closes #N`, `Fixes #N`, `Resolves #N`, `Related to #N`, or `Ref #N`) in their description. If no linked issue is referenced, the automated CI check will fail, post a warning comment, and block the PR from being merged.
+
 
 ---
 
